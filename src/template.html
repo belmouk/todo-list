@@ -8,6 +8,57 @@
 </head>
 
 <body>
+    <header>
+
+    </header>
+    <nav>
+        <button type="button" class="btn new">New Project</button>
+        <dialog class="modal project">
+            <form action="#">
+                <div>
+                    <label for="project-name">Project Name:</label>
+                    <input type="text" id="project-name" name="project-name">
+                </div>
+                <button type="submit">Add Project</button>
+                <button class="btn cancel">Cancel</button>
+            </form>
+        </dialog>
+        <ul>
+
+        </ul>
+    </nav>
+
+    <main>
+        <button type="button">Add Task</button>
+
+        <dialog class="modal todo">
+            <form action="#">
+                <legend>New Task</legend>
+                <div>
+                    <label for="task-title">Task</label>
+                    <input type="text" id="task-title" name="task-title">
+                </div>
+                <div>
+                    <label for="task-description">Description</label>
+                    <input type="text" id="task-description" name="task-description">
+                </div>
+                <div>
+                    <label for="task-dueDate">Due date</label>
+                    <input type="date" id="task-dueDate" name="task-dueDate">
+                </div>
+                <div>
+                    <label for="task-important">Important</label>
+                    <input type="checkbox" id="task-important" name="task-important">
+                </div>
+                <button type="submit" class="btn new">Add Task</button>
+                <button class="btn cancel">Cancel</button>
+            </form>
+        </dialog>
+
+        <ul>
+
+        </ul>
+    </main>
 
 </body>
 
