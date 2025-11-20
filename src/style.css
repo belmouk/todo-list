@@ -1,3 +1,18 @@
 .todo-important {
     background-color: hsl(110deg 60% 80%);
 }
+
+.todoCard>div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todoCard {
+    padding: 1em;
+}
+
+.todoCard-actions {
+    display: flex;
+    gap: 1em;
+}

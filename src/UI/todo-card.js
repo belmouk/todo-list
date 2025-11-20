@@ -6,13 +6,17 @@ export const createTodoCard = (todo) => {
     const todoTitleEl = document.createElement("h2");
     const deleteButtonEl = document.createElement("button");
     const doneEl = document.createElement("input");
+    const cardActionEl = document.createElement("div");
 
     todoTitleEl.textContent = todo.title;
     doneEl.setAttribute("type", "checkbox");
     doneEl.checked = todo.done;
-    deleteButtonEl.textContent = "delete";
+    deleteButtonEl.textContent = "Delete";
 
-    todoTitleSectionEl.append(todoTitleEl, deleteButtonEl, doneEl);
+    cardActionEl.append(deleteButtonEl, doneEl);
+    cardActionEl.classList.add("todoCard-actions")
+
+    todoTitleSectionEl.append(todoTitleEl, cardActionEl);
 
     //card description
     const todoDescriptionEl = document.createElement("p");
@@ -20,6 +24,7 @@ export const createTodoCard = (todo) => {
 
     //assembling card
     todoCardEl.append(todoTitleSectionEl, todoDescriptionEl);
+    todoCardEl.classList.add("todoCard");
     
     if (todo.important) {todoCardEl.classList.add("todo-important")}
 
