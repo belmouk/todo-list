@@ -339,3 +339,7 @@ header>h1 {
 .todo-important {
     background-color: hsl(60deg 100% 80%);
 }
+
+.project-selected {
+    background-color: red;
+}

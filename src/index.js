@@ -107,7 +107,12 @@ projectFormEl.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const form = new FormData(projectFormEl);
+    if (project) {
+        const projectIndex = projectList.findIndex(item=> item.id === project.id);
+        projectList[projectIndex].toggleSelected()
+    };
     project = new Project(form.get("project-name"));
+    project.toggleSelected();
     projectModalEl.close();
     projectFormEl.reset();
     projectList.push(project);
@@ -119,8 +124,13 @@ projectFormEl.addEventListener("submit", (e) => {
 projectListEl.addEventListener("click", (e) => {
     if (e.target.classList.contains("project-link")) {
         const projectId = e.target.closest("li").id;
+
+        const currentSelectedProjectIndex = projectList.findIndex(item=> item.id === projectId);
+        const oldSelectedProjectIndex = projectList.findIndex(item=> item.id === project.id);
+        projectList[oldSelectedProjectIndex].toggleSelected();
+        projectList[currentSelectedProjectIndex].toggleSelected();
         project = projectList.find(item => item.id === projectId);
-        console.log(project);
+        renderProjectList();
         renderTodoDisplay(project);
     } else if (e.target.classList.contains("delete")) {
         const projectId = e.target.closest("li").id;
@@ -132,7 +142,7 @@ projectListEl.addEventListener("click", (e) => {
 
 
 
-const renderProjectList = (project) => {
+const renderProjectList = () => {
     projectListEl.innerHTML = "";
     projectList.forEach(project => {
         const li = document.createElement("li");
@@ -145,6 +155,12 @@ const renderProjectList = (project) => {
         li.id = project.id;
         projectButtonEl.textContent = project.title;
         projectDeleteButtonEl.textContent = "X";
+
+        if (project.selected) {
+            projectButtonEl.classList.add("project-selected")
+        } else {
+            projectButtonEl.classList.remove("project-selected")
+        }
 
         li.append(projectButtonEl, projectDeleteButtonEl);
         
