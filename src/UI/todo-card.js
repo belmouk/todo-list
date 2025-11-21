@@ -1,8 +1,12 @@
-import {importantIcon} from "./important-icon.js"
+import {importantIcon, collapseIcon, expandIcon} from "./icons.js"
 
 export const createTodoCard = (todo) => {
     const todoCardEl = document.createElement("li");
-    
+
+    //card description
+    const todoDescriptionEl = document.createElement("p");
+    todoDescriptionEl.textContent = todo.description;
+       
     //card title
     const todoTitleSectionEl = document.createElement("div");
     const todoTitleEl = document.createElement("h2");
@@ -12,7 +16,10 @@ export const createTodoCard = (todo) => {
     const importantEl = document.createElement("input");
     const todoCardTitleContainerEl = document.createElement("div");
     const importantLabelEl = document.createElement("label");
-
+    const expandEl = document.createElement("button");
+    
+    expandEl.classList.add("todoCard-expand-button");
+    
     todoTitleEl.textContent = todo.title;
 
     doneEl.setAttribute("type", "checkbox");
@@ -37,15 +44,13 @@ export const createTodoCard = (todo) => {
 
     
 
-    cardActionEl.append(deleteButtonEl, importantLabelEl);
+    cardActionEl.append(deleteButtonEl, importantLabelEl, expandEl);
     cardActionEl.classList.add("todoCard-actions")
 
     todoTitleSectionEl.append(todoCardTitleContainerEl, cardActionEl);
     todoTitleSectionEl.classList.add("todoCard-title");
 
-    //card description
-    const todoDescriptionEl = document.createElement("p");
-    todoDescriptionEl.textContent = todo.description;
+    
 
     //assembling card
     todoCardEl.append(todoTitleSectionEl, todoDescriptionEl);
@@ -60,6 +65,15 @@ export const createTodoCard = (todo) => {
         todoCardEl.classList.add("todo-done");
         doneEl.checked = true;
     }
+
+    if (todo.descriptionVisible) {
+        expandEl.innerHTML = collapseIcon;
+        todoDescriptionEl.hidden = false;
+    } else {
+        expandEl.innerHTML = expandIcon;
+        todoDescriptionEl.hidden = true;
+    }
+    
 
     return todoCardEl;
 };

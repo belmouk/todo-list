@@ -239,6 +239,11 @@ input.done-checkbox {
 
 .todoCard>p {
     padding: 1rem;
+    border-top: 1px solid grey;
+}
+
+.collapse {
+    overflow: hidden;
 }
 
 /* buttons */
@@ -261,6 +266,16 @@ input.done-checkbox {
 
 .delete:hover {
     background-color: hsl(10deg 60% 60%);
+}
+
+.todoCard-expand-button svg {
+    pointer-events: none;
+}
+
+.todoCard-expand-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 /* page layout containers */

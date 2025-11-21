@@ -3,6 +3,7 @@ import "./style.css";
 import {Todo} from "./components/todo.js"
 import {Project} from "./components/project.js"
 import {createTodoCard} from "./UI/todo-card.js"
+import { collapseIcon, expandIcon } from "./UI/icons.js";
 
 const todo1 = new Todo("Read book", "Read Atomic habits", "21st november 2025");
 const todo2 = new Todo("Write code", "Write the todo App", "30th november 2025");
@@ -19,6 +20,7 @@ const todoFormEl = document.querySelector(".modal.todo>form");
 const todoCardEl = document.querySelectorAll(".todoCard");
 const cancelButtonEl = document.querySelectorAll(".cancel");
 const headerEl = document.querySelector("header");
+
 
 const handleCancelForm = (e) => {
     const formEl = e.target.closest("form");
@@ -80,12 +82,19 @@ todoListEl.addEventListener("click", (e) => {
         project.deleteTodo(todoEl.dataset.id);
         renderTodos(project);
     } else if (e.target.classList.contains("important-checkbox")) {
-        const todo = project.getTodo(todoEl.dataset.id);
+        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
+        const todo = project.todoList[todoIndex];
         todo.toggleImportant();
         renderTodos(project);
     } else if (e.target.classList.contains("done-checkbox")) {
-        const todo = project.getTodo(todoEl.dataset.id);
+        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
+        const todo = project.todoList[todoIndex];
         todo.toggleDone();
+        renderTodos(project);
+    } else if (e.target.classList.contains("todoCard-expand-button")) {
+        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
+        const todo = project.todoList[todoIndex];
+        todo.toggleDescriptionVisible();
         renderTodos(project);
     }
 });

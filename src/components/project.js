@@ -9,7 +9,7 @@ export class Project {
     deleteTodo(todoId) {
         this.todoList = this.todoList.filter(item => !(item.id === todoId));
     }
-    getTodo(todoId) {
-        return this.todoList.filter(item => (item.id === todoId))[0];
+    getTodoIndex(todoId) {
+        return this.todoList.findIndex(item => (item.id === todoId));
     }
 }
