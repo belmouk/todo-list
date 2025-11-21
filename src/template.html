@@ -15,12 +15,14 @@
         <button type="button" class="btn new">New Project</button>
         <dialog class="modal project">
             <form action="#">
-                <div>
+                <div class="textInput-container">
                     <label for="project-name">Project Name:</label>
-                    <input type="text" id="project-name" name="project-name">
+                    <input type="text" id="project-name" name="project-name" required>
                 </div>
-                <button type="submit" class="btn">Add Project</button>
-                <button type="button" class="btn cancel">Cancel</button>
+                <div class="form-buttons">
+                    <button type="submit" class="btn">Add Project</button>
+                    <button type="button" class="btn cancel">Cancel</button>
+                </div>
             </form>
         </dialog>
         <ul>
@@ -28,7 +30,7 @@
         </ul>
     </nav>
 
-    <main>
+    <main hidden>
         <button type="button" class="btn">Add Task</button>
 
         <dialog class="modal todo">
@@ -36,7 +38,7 @@
                 <legend>New Task</legend>
                 <div class="textInput-container">
                     <label for="task-title">Task</label>
-                    <input type="text" id="task-title" name="task-title">
+                    <input type="text" id="task-title" name="task-title" required>
                 </div>
                 <div class="textInput-container">
                     <label for="task-description">Description</label>
