@@ -34,24 +34,27 @@
         <dialog class="modal todo">
             <form action="#">
                 <legend>New Task</legend>
-                <div>
+                <div class="textInput-container">
                     <label for="task-title">Task</label>
                     <input type="text" id="task-title" name="task-title">
                 </div>
-                <div>
+                <div class="textInput-container">
                     <label for="task-description">Description</label>
-                    <textarea id="task-description" name="task-description"></textarea>
+                    <textarea id="task-description" name="task-description" rows="5"></textarea>
                 </div>
-                <div>
+                <div class="textInput-container">
                     <label for="task-dueDate">Due date</label>
                     <input type="date" id="task-dueDate" name="task-dueDate">
                 </div>
-                <div>
+                <div class="checkboxInput-container">
                     <label for="task-important">Important</label>
-                    <input type="checkbox" id="task-important" name="task-important">
+                    <div><input type="checkbox" id="task-important" name="task-important">Mark the task as important
+                    </div>
                 </div>
-                <button type="submit" class="btn new">Add Task</button>
-                <button type="button" class="btn cancel">Cancel</button>
+                <div class="form-buttons">
+                    <button type="submit" class="btn new">Add Task</button>
+                    <button type="button" class="btn cancel">Cancel</button>
+                </div>
             </form>
         </dialog>
 

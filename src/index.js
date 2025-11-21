@@ -31,7 +31,7 @@ const renderTodos = (project) => {
     todoListEl.innerHTML = "";
     headerEl.innerHTML = "";
     
-    const projectTitleEl = document.createElement("h2");
+    const projectTitleEl = document.createElement("h1");
     projectTitleEl.textContent = project.title;
     headerEl.appendChild(projectTitleEl);
 
@@ -43,7 +43,7 @@ const renderTodos = (project) => {
 
 
 addTaskButtonEl.addEventListener("click", (e) => {
-    todoModalEl.show();
+    todoModalEl.showModal();
 });
 
 todoFormEl.addEventListener("submit", (e) => {
