@@ -75,15 +75,18 @@ cancelButtonEl.forEach(btn => btn.addEventListener("click", handleCancelForm));
 
 
 todoListEl.addEventListener("click", (e) => {
-    const todoEl = e.target.closest("section");
+    const todoEl = e.target.closest("li");
     if (e.target.classList.contains("delete")) {
         project.deleteTodo(todoEl.dataset.id);
         renderTodos(project);
-    } else if (e.target.type === "checkbox") {
+    } else if (e.target.classList.contains("important-checkbox")) {
         const todo = project.getTodo(todoEl.dataset.id);
         todo.toggleImportant();
         renderTodos(project);
+    } else if (e.target.classList.contains("done-checkbox")) {
+        const todo = project.getTodo(todoEl.dataset.id);
+        todo.toggleDone();
+        renderTodos(project);
     }
-    
 });
 

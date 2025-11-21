@@ -1,5 +1,7 @@
+import {importantIcon} from "./important-icon.js"
+
 export const createTodoCard = (todo) => {
-    const todoCardEl = document.createElement("section");
+    const todoCardEl = document.createElement("li");
     
     //card title
     const todoTitleSectionEl = document.createElement("div");
@@ -7,17 +9,39 @@ export const createTodoCard = (todo) => {
     const deleteButtonEl = document.createElement("button");
     const doneEl = document.createElement("input");
     const cardActionEl = document.createElement("div");
+    const importantEl = document.createElement("input");
+    const todoCardTitleContainerEl = document.createElement("div");
+    const importantLabelEl = document.createElement("label");
 
     todoTitleEl.textContent = todo.title;
+
     doneEl.setAttribute("type", "checkbox");
     doneEl.checked = todo.done;
-    deleteButtonEl.textContent = "Delete";
-    deleteButtonEl.classList.add("delete");
+    doneEl.classList.add("done-checkbox");
 
-    cardActionEl.append(deleteButtonEl, doneEl);
+    importantEl.setAttribute("type", "checkbox");
+    importantEl.checked = todo.important;
+    importantEl.classList.add("important-checkbox");
+    importantEl.id = `todoCard-important-${todo.id}`;
+
+    importantLabelEl.setAttribute("for", `todoCard-important-${todo.id}`);
+    importantLabelEl.innerHTML = importantIcon;
+
+    importantLabelEl.appendChild(importantEl);
+
+    deleteButtonEl.textContent = "Delete";
+    deleteButtonEl.classList.add("delete", "btn");
+
+    todoCardTitleContainerEl.classList.add("todoCard-header-container");
+    todoCardTitleContainerEl.append(doneEl, todoTitleEl)
+
+    
+
+    cardActionEl.append(deleteButtonEl, importantLabelEl);
     cardActionEl.classList.add("todoCard-actions")
 
-    todoTitleSectionEl.append(todoTitleEl, cardActionEl);
+    todoTitleSectionEl.append(todoCardTitleContainerEl, cardActionEl);
+    todoTitleSectionEl.classList.add("todoCard-title");
 
     //card description
     const todoDescriptionEl = document.createElement("p");
@@ -30,6 +54,10 @@ export const createTodoCard = (todo) => {
     
     if (todo.important) {
         todoCardEl.classList.add("todo-important");
+        importantEl.checked = true;
+    }
+    if (todo.done) {
+        todoCardEl.classList.add("todo-done");
         doneEl.checked = true;
     }
 
