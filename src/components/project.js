@@ -6,7 +6,10 @@ export class Project {
     }
     updateTitle(newTitle) {this.title = newTitle}
     addTodo(todo) {this.todoList.push(todo)}
-    deleteTodo(todo) {
-        this.todoList = this.todoList.filter(item => !(item.id === todo.id));
+    deleteTodo(todoId) {
+        this.todoList = this.todoList.filter(item => !(item.id === todoId));
+    }
+    getTodo(todoId) {
+        return this.todoList.filter(item => (item.id === todoId))[0];
     }
 }

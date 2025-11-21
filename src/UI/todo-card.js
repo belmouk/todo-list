@@ -12,6 +12,7 @@ export const createTodoCard = (todo) => {
     doneEl.setAttribute("type", "checkbox");
     doneEl.checked = todo.done;
     deleteButtonEl.textContent = "Delete";
+    deleteButtonEl.classList.add("delete");
 
     cardActionEl.append(deleteButtonEl, doneEl);
     cardActionEl.classList.add("todoCard-actions")
@@ -25,8 +26,12 @@ export const createTodoCard = (todo) => {
     //assembling card
     todoCardEl.append(todoTitleSectionEl, todoDescriptionEl);
     todoCardEl.classList.add("todoCard");
+    todoCardEl.setAttribute("data-id", todo.id)
     
-    if (todo.important) {todoCardEl.classList.add("todo-important")}
+    if (todo.important) {
+        todoCardEl.classList.add("todo-important");
+        doneEl.checked = true;
+    }
 
     return todoCardEl;
 };
