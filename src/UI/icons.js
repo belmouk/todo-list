@@ -10,7 +10,13 @@ export const expandIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill=
   <line x1="5" y1="12" x2="19" y2="12" />
 </svg>`;
 
-export const collapseIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+export const collapseIcon = `<svg width="2rem" height="2rem" viewBox="0 0 24 24" fill="none"
      stroke="currentColor" stroke-width="2" stroke-linecap="round">
   <line x1="5" y1="12" x2="19" y2="12" />
+</svg>`;
+
+export const editIcon = `<svg width="2rem" height="2rem" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+  <path d="M9 11l8.5-8.5 3 3L12 14l-4 1 1-4z"/>
 </svg>`;

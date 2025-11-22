@@ -3,7 +3,7 @@ import "./style.css";
 import {Todo} from "./components/todo.js"
 import {Project} from "./components/project.js"
 import {createTodoCard} from "./UI/todo-card.js"
-import { collapseIcon, expandIcon } from "./UI/icons.js";
+import { editIcon } from "./UI/icons.js";
 
 const todo1 = new Todo("Read book", "Read Atomic habits", "21st november 2025");
 const todo2 = new Todo("Write code", "Write the todo App", "30th november 2025");
@@ -25,6 +25,9 @@ const projectModalEl = document.querySelector(".modal.project");
 const projectFormEl = document.querySelector(".modal.project>form");
 const main = document.querySelector("main");
 const header = document.querySelector("header");
+
+
+
 
 
 const handleCancelForm = (e) => {
@@ -62,40 +65,59 @@ todoFormEl.addEventListener("submit", (e) => {
     const description = form.get("task-description");
     const dueDate = form.get("task-dueDate");
     const important = form.get("task-important");
-
+    
     const todo = new Todo(title, description, dueDate);
     if (important === "on") {todo.toggleImportant()};
 
-    project.addTodo(todo);
+    if (todoFormEl.getAttributeNames().includes("data-todoid")) {
+        todo.id = todoFormEl.dataset.todoid;
+        project.editTodo(todo);
+        todoFormEl.removeAttribute("data-todoID");
+    } else {
+        project.addTodo(todo);
+    }
+    
     todoFormEl.reset();
     todoModalEl.close();
 
-    const todoEl = createTodoCard(todo);
-    todoListEl.appendChild(todoEl);
+    renderTodoDisplay(project);
 });
 
 cancelButtonEl.forEach(btn => btn.addEventListener("click", handleCancelForm));
 
 todoListEl.addEventListener("click", (e) => {
     const todoEl = e.target.closest("li");
+    const todoIndex = project.getTodoIndex(todoEl.dataset.id);
+    const todo = project.todoList[todoIndex];
+
     if (e.target.classList.contains("delete")) {
         project.deleteTodo(todoEl.dataset.id);
         renderTodos(project);
     } else if (e.target.classList.contains("important-checkbox")) {
-        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
-        const todo = project.todoList[todoIndex];
         todo.toggleImportant();
         renderTodos(project);
     } else if (e.target.classList.contains("done-checkbox")) {
-        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
-        const todo = project.todoList[todoIndex];
         todo.toggleDone();
         renderTodos(project);
     } else if (e.target.classList.contains("todoCard-expand-button")) {
-        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
-        const todo = project.todoList[todoIndex];
         todo.toggleDescriptionVisible();
         renderTodos(project);
+    } else if (e.target.classList.contains("edit")) {
+        todoModalEl.showModal();
+        const formTitleEl = document.querySelector("#task-title");
+        const formDescriptionEl = document.querySelector("#task-description");
+        const formDueDateEl = document.querySelector("#task-dueDate");
+        const formImportantEl = document.querySelector("#task-important");
+
+        formTitleEl.value = todo.title;
+        formDescriptionEl.value = todo.description;
+        formDueDateEl.value = todo.dueDate;
+        formImportantEl.checked = todo.important;
+
+        todoFormEl.setAttribute("data-todoid", todo.id);
+        const legendEl = todoFormEl.querySelector("legend");
+        legendEl.textContent = "Edit Task";
+
     }
 });
 
@@ -106,25 +128,31 @@ newProjectButtonEl.addEventListener("click", () => {
 projectFormEl.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    if (project) {project.toggleSelected()};
+
     const form = new FormData(projectFormEl);
-    if (project) {
-        const projectIndex = projectList.findIndex(item=> item.id === project.id);
-        projectList[projectIndex].toggleSelected()
-    };
-    project = new Project(form.get("project-name"));
-    project.toggleSelected();
+    
+    if (projectFormEl.getAttributeNames().includes("data-projectid")) {
+        const projectToEdit = projectList.find(item => item.id === projectFormEl.dataset.projectid);
+        projectToEdit.title = form.get("project-name");
+        projectFormEl.removeAttribute("data-projectid");
+        project.toggleSelected();
+    } else {
+        project = new Project(form.get("project-name"));
+        project.toggleSelected();
+        projectList.push(project);
+    }
+    
     projectModalEl.close();
     projectFormEl.reset();
-    projectList.push(project);
-
+    
     renderProjectList();
     renderTodoDisplay(project);
 });
 
 projectListEl.addEventListener("click", (e) => {
+    const projectId = e.target.closest("li").id;
     if (e.target.classList.contains("project-link")) {
-        const projectId = e.target.closest("li").id;
-
         const currentSelectedProjectIndex = projectList.findIndex(item=> item.id === projectId);
         const oldSelectedProjectIndex = projectList.findIndex(item=> item.id === project.id);
         projectList[oldSelectedProjectIndex].toggleSelected();
@@ -133,14 +161,16 @@ projectListEl.addEventListener("click", (e) => {
         renderProjectList();
         renderTodoDisplay(project);
     } else if (e.target.classList.contains("delete")) {
-        const projectId = e.target.closest("li").id;
         projectList = projectList.filter(item => !(item.id === projectId));
         renderProjectList();
         resetDisplay();
+    } else if (e.target.classList.contains("edit")) {
+        projectModalEl.showModal();
+        projectFormEl.setAttribute("data-projectid", projectId);
+        const projectNameEl = projectFormEl.querySelector("#project-name");
+        projectNameEl.value = project.title;
     }
 })
-
-
 
 const renderProjectList = () => {
     projectListEl.innerHTML = "";
@@ -148,9 +178,12 @@ const renderProjectList = () => {
         const li = document.createElement("li");
         const projectButtonEl = document.createElement("button");
         const projectDeleteButtonEl = document.createElement("button");
+        const editProjectButtonEl = document.createElement("button");
 
         projectButtonEl.classList.add("project-link", "btn");
         projectDeleteButtonEl.classList.add("delete", "btn");
+        editProjectButtonEl.classList.add("edit");
+        editProjectButtonEl.innerHTML = editIcon;
 
         li.id = project.id;
         projectButtonEl.textContent = project.title;
@@ -162,9 +195,8 @@ const renderProjectList = () => {
             projectButtonEl.classList.remove("project-selected")
         }
 
-        li.append(projectButtonEl, projectDeleteButtonEl);
+        li.append(projectButtonEl, editProjectButtonEl, projectDeleteButtonEl);
         
-
         projectListEl.appendChild(li);
     });
 };

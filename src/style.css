@@ -285,6 +285,16 @@ input.done-checkbox {
     cursor: pointer;
 }
 
+.edit {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.edit svg {
+    pointer-events: none;
+}
+
 /* project cards */
 
 nav>ul>li {

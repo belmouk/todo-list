@@ -1,4 +1,4 @@
-import {importantIcon, collapseIcon, expandIcon} from "./icons.js"
+import {importantIcon, collapseIcon, expandIcon, editIcon} from "./icons.js"
 
 export const createTodoCard = (todo) => {
     const todoCardEl = document.createElement("li");
@@ -7,7 +7,7 @@ export const createTodoCard = (todo) => {
     const todoDescriptionEl = document.createElement("p");
     todoDescriptionEl.textContent = todo.description;
        
-    //card title
+    //card header
     const todoTitleSectionEl = document.createElement("div");
     const todoTitleEl = document.createElement("h2");
     const deleteButtonEl = document.createElement("button");
@@ -17,6 +17,7 @@ export const createTodoCard = (todo) => {
     const todoCardTitleContainerEl = document.createElement("div");
     const importantLabelEl = document.createElement("label");
     const expandEl = document.createElement("button");
+    const updateButtonEl = document.createElement("button");
     
     expandEl.classList.add("todoCard-expand-button");
     
@@ -42,25 +43,26 @@ export const createTodoCard = (todo) => {
     todoCardTitleContainerEl.classList.add("todoCard-header-container");
     todoCardTitleContainerEl.append(doneEl, todoTitleEl)
 
-    
+    updateButtonEl.innerHTML = editIcon;
+    updateButtonEl.classList.add("edit");
 
-    cardActionEl.append(deleteButtonEl, importantLabelEl, expandEl);
+    cardActionEl.append(deleteButtonEl, updateButtonEl, importantLabelEl, expandEl);
     cardActionEl.classList.add("todoCard-actions")
 
     todoTitleSectionEl.append(todoCardTitleContainerEl, cardActionEl);
     todoTitleSectionEl.classList.add("todoCard-title");
-
-    
 
     //assembling card
     todoCardEl.append(todoTitleSectionEl, todoDescriptionEl);
     todoCardEl.classList.add("todoCard");
     todoCardEl.setAttribute("data-id", todo.id)
     
+    //card visual state logic
     if (todo.important) {
         todoCardEl.classList.add("todo-important");
         importantEl.checked = true;
-    }
+    } 
+
     if (todo.done) {
         todoCardEl.classList.add("todo-done");
         doneEl.checked = true;
@@ -73,7 +75,6 @@ export const createTodoCard = (todo) => {
         expandEl.innerHTML = expandIcon;
         todoDescriptionEl.hidden = true;
     }
-    
 
     return todoCardEl;
 };
