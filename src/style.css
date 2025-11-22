@@ -324,6 +324,7 @@ nav>ul>li {
 header {
     grid-area: header;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -347,6 +348,8 @@ main>button {
 
 header>h1 {
     font-size: 4rem;
+    margin-bottom: 1rem;
+
 }
 
 /* Keep last in CSS */

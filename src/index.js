@@ -26,10 +26,10 @@ const projectFormEl = document.querySelector(".modal.project>form");
 const main = document.querySelector("main");
 const header = document.querySelector("header");
 const dueDateEl = document.querySelector("#task-dueDate");
+const removeDoneTasksEl = document.querySelector(".remove-done-tasks");
 
 const todayDate = new Date().toISOString().split("T")[0];
 dueDateEl.setAttribute("min", todayDate);
-
 
 
 
@@ -45,13 +45,75 @@ const renderTodos = (project) => {
     headerEl.innerHTML = "";
     
     const projectTitleEl = document.createElement("h1");
+    const remainingTasksEl = document.createElement("h2");
+
     projectTitleEl.textContent = project.title;
-    headerEl.appendChild(projectTitleEl);
+    remainingTasksEl.textContent = `Remaining tasks: ${countRemainingTasks(project)}`;
+    headerEl.append(projectTitleEl, remainingTasksEl);
 
     project.todoList.forEach(todo => {
         const todoEl = createTodoCard(todo);
         todoListEl.appendChild(todoEl);
     })
+};
+
+const renderProjectList = () => {
+    projectListEl.innerHTML = "";
+    projectList.forEach(project => {
+        const li = document.createElement("li");
+        const projectButtonEl = document.createElement("button");
+        const projectDeleteButtonEl = document.createElement("button");
+        const editProjectButtonEl = document.createElement("button");
+
+        projectButtonEl.classList.add("project-link", "btn");
+        projectDeleteButtonEl.classList.add("delete", "btn");
+        editProjectButtonEl.classList.add("edit");
+        editProjectButtonEl.innerHTML = editIcon;
+
+        li.id = project.id;
+        projectButtonEl.textContent = project.title;
+        projectDeleteButtonEl.textContent = "X";
+
+        if (project.selected) {
+            projectButtonEl.classList.add("project-selected")
+        } else {
+            projectButtonEl.classList.remove("project-selected")
+        }
+
+        li.append(projectButtonEl, editProjectButtonEl, projectDeleteButtonEl);
+        
+        projectListEl.appendChild(li);
+    });
+};
+
+const resetDisplay = () => {
+    
+    main.hidden = true;
+    header.innerHTML = "";
+};
+
+const renderTodoDisplay = (project) => {
+    main.hidden = false;
+    renderTodos(project);
+};
+
+
+const countRemainingTasks = () => {
+    const numberOfRemainingTasks = project.todoList.reduce((counter, todo) => {
+        if (!todo.done) {counter++};
+        return counter;
+    }, 0);
+    return numberOfRemainingTasks;
+};
+
+const removeDoneTasks = () => {
+    const projectUpdated = projectList.find(item => item.id === project.id);
+    projectUpdated.todoList.forEach((todo, todoIndex) => {
+        if (todo.done) {
+            projectUpdated.todoList.pop(todoIndex);
+        }
+    })
+    project = projectUpdated;
 };
 
 
@@ -89,38 +151,40 @@ todoFormEl.addEventListener("submit", (e) => {
 cancelButtonEl.forEach(btn => btn.addEventListener("click", handleCancelForm));
 
 todoListEl.addEventListener("click", (e) => {
-    const todoEl = e.target.closest("li");
-    const todoIndex = project.getTodoIndex(todoEl.dataset.id);
-    const todo = project.todoList[todoIndex];
+    if (e.target.tagName.toLowerCase() !== "ul") {
+        const todoEl = e.target.closest("li");
+        const todoIndex = project.getTodoIndex(todoEl.dataset.id);
+        const todo = project.todoList[todoIndex];
 
-    if (e.target.classList.contains("delete")) {
-        project.deleteTodo(todoEl.dataset.id);
-        renderTodos(project);
-    } else if (e.target.classList.contains("important-checkbox")) {
-        todo.toggleImportant();
-        renderTodos(project);
-    } else if (e.target.classList.contains("done-checkbox")) {
-        todo.toggleDone();
-        renderTodos(project);
-    } else if (e.target.classList.contains("todoCard-expand-button")) {
-        todo.toggleDescriptionVisible();
-        renderTodos(project);
-    } else if (e.target.classList.contains("edit")) {
-        todoModalEl.showModal();
-        const formTitleEl = document.querySelector("#task-title");
-        const formDescriptionEl = document.querySelector("#task-description");
-        const formDueDateEl = document.querySelector("#task-dueDate");
-        const formImportantEl = document.querySelector("#task-important");
+        if (e.target.classList.contains("delete")) {
+            project.deleteTodo(todoEl.dataset.id);
+            renderTodos(project);
+        } else if (e.target.classList.contains("important-checkbox")) {
+            todo.toggleImportant();
+            renderTodos(project);
+        } else if (e.target.classList.contains("done-checkbox")) {
+            todo.toggleDone();
+            renderTodos(project);
+        } else if (e.target.classList.contains("todoCard-expand-button")) {
+            todo.toggleDescriptionVisible();
+            renderTodos(project);
+        } else if (e.target.classList.contains("edit")) {
+            todoModalEl.showModal();
+            const formTitleEl = document.querySelector("#task-title");
+            const formDescriptionEl = document.querySelector("#task-description");
+            const formDueDateEl = document.querySelector("#task-dueDate");
+            const formImportantEl = document.querySelector("#task-important");
 
-        formTitleEl.value = todo.title;
-        formDescriptionEl.value = todo.description;
-        formDueDateEl.value = todo.dueDate;
-        formImportantEl.checked = todo.important;
+            formTitleEl.value = todo.title;
+            formDescriptionEl.value = todo.description;
+            formDueDateEl.value = todo.dueDate;
+            formImportantEl.checked = todo.important;
 
-        todoFormEl.setAttribute("data-todoid", todo.id);
-        const legendEl = todoFormEl.querySelector("legend");
-        legendEl.textContent = "Edit Task";
+            todoFormEl.setAttribute("data-todoid", todo.id);
+            const legendEl = todoFormEl.querySelector("legend");
+            legendEl.textContent = "Edit Task";
 
+        }
     }
 });
 
@@ -154,63 +218,35 @@ projectFormEl.addEventListener("submit", (e) => {
 });
 
 projectListEl.addEventListener("click", (e) => {
-    const projectId = e.target.closest("li").id;
-    if (e.target.classList.contains("project-link")) {
-        const currentSelectedProjectIndex = projectList.findIndex(item=> item.id === projectId);
-        const oldSelectedProjectIndex = projectList.findIndex(item=> item.id === project.id);
-        projectList[oldSelectedProjectIndex].toggleSelected();
-        projectList[currentSelectedProjectIndex].toggleSelected();
-        project = projectList.find(item => item.id === projectId);
-        renderProjectList();
-        renderTodoDisplay(project);
-    } else if (e.target.classList.contains("delete")) {
-        projectList = projectList.filter(item => !(item.id === projectId));
-        renderProjectList();
-        resetDisplay();
-    } else if (e.target.classList.contains("edit")) {
-        projectModalEl.showModal();
-        projectFormEl.setAttribute("data-projectid", projectId);
-        const projectNameEl = projectFormEl.querySelector("#project-name");
-        projectNameEl.value = project.title;
-    }
-})
-
-const renderProjectList = () => {
-    projectListEl.innerHTML = "";
-    projectList.forEach(project => {
-        const li = document.createElement("li");
-        const projectButtonEl = document.createElement("button");
-        const projectDeleteButtonEl = document.createElement("button");
-        const editProjectButtonEl = document.createElement("button");
-
-        projectButtonEl.classList.add("project-link", "btn");
-        projectDeleteButtonEl.classList.add("delete", "btn");
-        editProjectButtonEl.classList.add("edit");
-        editProjectButtonEl.innerHTML = editIcon;
-
-        li.id = project.id;
-        projectButtonEl.textContent = project.title;
-        projectDeleteButtonEl.textContent = "X";
-
-        if (project.selected) {
-            projectButtonEl.classList.add("project-selected")
-        } else {
-            projectButtonEl.classList.remove("project-selected")
+    if (e.target.tagName.toLowerCase() !== "ul") {
+        const projectId = e.target.closest("li").id;
+        if (e.target.classList.contains("project-link")) {
+            const currentSelectedProjectIndex = projectList.findIndex(item=> item.id === projectId);
+            const oldSelectedProjectIndex = projectList.findIndex(item=> item.id === project.id);
+            projectList[oldSelectedProjectIndex].toggleSelected();
+            projectList[currentSelectedProjectIndex].toggleSelected();
+            project = projectList.find(item => item.id === projectId);
+            renderProjectList();
+            renderTodoDisplay(project);
+        } else if (e.target.classList.contains("delete")) {
+            projectList = projectList.filter(item => !(item.id === projectId));
+            renderProjectList();
+            resetDisplay();
+        } else if (e.target.classList.contains("edit")) {
+            projectModalEl.showModal();
+            projectFormEl.setAttribute("data-projectid", projectId);
+            const projectNameEl = projectFormEl.querySelector("#project-name");
+            projectNameEl.value = project.title;
         }
+    }
+});
 
-        li.append(projectButtonEl, editProjectButtonEl, projectDeleteButtonEl);
-        
-        projectListEl.appendChild(li);
-    });
-};
-
-const resetDisplay = () => {
-    
-    main.hidden = true;
-    header.innerHTML = "";
-}
-
-const renderTodoDisplay = (project) => {
-    main.hidden = false;
+removeDoneTasksEl.addEventListener("click", () => {
+    removeDoneTasks();
     renderTodos(project);
-};
+});
+
+
+
+
+
