@@ -22,7 +22,7 @@ export const createTodoCard = (todo) => {
     const dateEl = document.createElement("div");
     
     dateEl.classList.add("todoCard-date");
-    dateEl.textContent = format(todo.dueDate, "EE, MMM do, yyyy");
+    dateEl.textContent = format(new Date(todo.dueDate), "EE, MMM do, yyyy");
 
     expandEl.classList.add("todoCard-expand-button");
     

@@ -2,7 +2,7 @@ export class Project {
     constructor(title, todoList = [], selected= false, id) {
         this.title = title;
         this.todoList = todoList;
-        this.id = crypto.randomUUID();
+        this.id = id || crypto.randomUUID();;
         this.selected = selected;
     }
     updateTitle(newTitle) {this.title = newTitle}
