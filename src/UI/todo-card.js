@@ -1,4 +1,5 @@
 import {importantIcon, collapseIcon, expandIcon, editIcon} from "./icons.js"
+import { format } from "date-fns";
 
 export const createTodoCard = (todo) => {
     const todoCardEl = document.createElement("li");
@@ -18,7 +19,11 @@ export const createTodoCard = (todo) => {
     const importantLabelEl = document.createElement("label");
     const expandEl = document.createElement("button");
     const updateButtonEl = document.createElement("button");
+    const dateEl = document.createElement("div");
     
+    dateEl.classList.add("todoCard-date");
+    dateEl.textContent = format(todo.dueDate, "EE, MMM do, yyyy");
+
     expandEl.classList.add("todoCard-expand-button");
     
     todoTitleEl.textContent = todo.title;
@@ -46,7 +51,7 @@ export const createTodoCard = (todo) => {
     updateButtonEl.innerHTML = editIcon;
     updateButtonEl.classList.add("edit");
 
-    cardActionEl.append(deleteButtonEl, updateButtonEl, importantLabelEl, expandEl);
+    cardActionEl.append(dateEl, deleteButtonEl, updateButtonEl, importantLabelEl, expandEl);
     cardActionEl.classList.add("todoCard-actions")
 
     todoTitleSectionEl.append(todoCardTitleContainerEl, cardActionEl);

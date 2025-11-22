@@ -25,7 +25,10 @@ const projectModalEl = document.querySelector(".modal.project");
 const projectFormEl = document.querySelector(".modal.project>form");
 const main = document.querySelector("main");
 const header = document.querySelector("header");
+const dueDateEl = document.querySelector("#task-dueDate");
 
+const todayDate = new Date().toISOString().split("T")[0];
+dueDateEl.setAttribute("min", todayDate);
 
 
 
@@ -63,7 +66,7 @@ todoFormEl.addEventListener("submit", (e) => {
 
     const title = form.get("task-title");
     const description = form.get("task-description");
-    const dueDate = form.get("task-dueDate");
+    const dueDate = new Date(form.get("task-dueDate"));
     const important = form.get("task-important");
     
     const todo = new Todo(title, description, dueDate);

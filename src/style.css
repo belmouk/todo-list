@@ -216,6 +216,8 @@ ul {
 .todoCard-actions {
     display: flex;
     gap: 1em;
+    align-items: center;
+
 }
 
 .todoCard-actions>label {
@@ -251,6 +253,13 @@ input.done-checkbox {
 
 .collapse {
     overflow: hidden;
+}
+
+.todoCard-date {
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: 500;
+
 }
 
 /* buttons */
